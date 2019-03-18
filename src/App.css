@@ -1,0 +1,54 @@
+body{
+  background-color: #fff7f7
+}
+.App {
+  text-align: center;
+  height: 100vh;
+}
+
+#title {
+  margin: 20px 0;
+  width: 100%;
+  font-size: 100px;
+  font-weight: 100;
+  text-align: center;
+  color: rgba(175, 47, 47, 0.15);
+}
+
+#App-main {
+  background: #fff;
+  width: 600px;
+  margin: 0 auto 40px auto;
+  position: relative;
+  box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2), 0 25px 50px 0 rgba(0, 0, 0, 0.1);
+}
+
+
+#App-header {
+  margin: auto;
+  text-align: left;
+  display: flex;
+  align-items: center;
+  border: 1px solid #dcd6d6;
+}
+#App-header > img{
+  margin: 0 15px;
+  cursor: pointer;
+}
+#App-header > input {
+  margin-left: 10px;
+  font-size: 24px;
+  font-weight: 300;
+  width: 100%;
+  border: none;
+  /* opacity: .2; */
+  margin: 10px;
+  outline: none;
+  font-style: italic
+}
+
+#App-body {
+  margin: auto;
+  border: 1px solid #dcd6d6;
+}
+
