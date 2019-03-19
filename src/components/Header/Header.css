@@ -1,0 +1,27 @@
+
+#App-header {
+    margin: auto;
+    text-align: left;
+    display: flex;
+    align-items: center;
+    border: 1px solid #dcd6d6;
+  }
+  #App-header > img{
+    margin: 0 15px;
+    cursor: pointer;
+  }
+  #App-header > input {
+    margin-left: 10px;
+    font-size: 24px;
+    font-weight: 300;
+    width: 100%;
+    border: none;
+    /* opacity: .2; */
+    margin: 10px;
+    outline: none;
+
+  }
+  #App-header > input::placeholder {
+      opacity: .5;
+      font-style: italic
+  }

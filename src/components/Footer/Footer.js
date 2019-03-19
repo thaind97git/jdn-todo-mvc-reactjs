@@ -3,15 +3,16 @@ import './Footer.css'
 
 class Footer extends Component {
     render() {
+        const { totalItem, statusEnums, onClickFilter } = this.props;
         return (
             <div id="Footer">
                 <div id="number">
-                    3 items left
+                    {totalItem} items left
                 </div>
                 <div id="status">
-                    <p className="active">All</p>
-                    <p>Active</p>
-                    <p>Complete</p>
+                    {
+                        statusEnums.map((item, index) => <p className="active" onClick={onClickFilter(item.status)} key={item.status}>{item.title}</p>)
+                    }
                 </div>
             </div>
         );

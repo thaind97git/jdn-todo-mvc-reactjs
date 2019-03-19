@@ -19,12 +19,17 @@
     margin-left: 10px;
     word-break: break-all;
     margin: 13px 2px;
-    max-width: 82%
+    max-width: 82%;
+    
 }
 .TodoItems .check-img {
     margin: 0 10px;
     cursor: pointer;
     transition: all 0.3s;
+}
+
+.TodoItems .check-img:focus > p {
+    transition: 3s cubic-bezier(0.075, 0.82, 0.165, 1)
 }
 
 .TodoItems .cancel-img {

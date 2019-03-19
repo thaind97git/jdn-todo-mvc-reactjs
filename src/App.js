@@ -2,7 +2,10 @@ import React, { Component } from 'react';
 import './App.css';
 import TodoItems from './components/Todoitems';
 import Footer from './components/Footer/Footer';
-import TickImg from './image/tick.svg';
+import Header from './components/Header/Header';
+
+let defaultTodoItems = [];
+
 class App extends Component {
     constructor() {
         super();
@@ -11,11 +14,18 @@ class App extends Component {
                 { title: 'Item 01', isComplete: true },
                 { title: 'Item 02', isComplete: true },
                 { title: 'Item 03', isComplete: false }
+            ],
+            'statusEnums': [
+                { title: 'All', status: 1 },
+                { title: 'Active', status: 2 },
+                { title: 'Complete', status: 3 }
             ]
         }
 
+        defaultTodoItems = [...this.state.todoItems];
         this.onKeyUp = this.onKeyUp.bind(this);
         this.onClickAll = this.onClickAll.bind(this);
+        this.onClickFilter = this.onClickFilter.bind(this);
     }
 
     onItemClicked(item) {
@@ -73,15 +83,40 @@ class App extends Component {
         }
     }
 
+    onClickFilter(index) {
+        return () => {
+            switch (index) {
+                case 1:
+                    this.setState({
+                        todoItems: defaultTodoItems
+                    });
+                    break;
+                case 2:
+                    this.setState({
+                        todoItems: defaultTodoItems.filter(t => t.isComplete === false)
+                    });
+                    break;
+                case 3:
+                    this.setState({
+                        todoItems: defaultTodoItems.filter(t => t.isComplete === true)
+                    });
+                    break;
+                default:
+                    this.setState({
+                        todoItems: defaultTodoItems
+                    })
+                    break;
+            }
+        }
+    }
+
     render() {
+        const { todoItems, statusEnums } = this.state;
         return (
             <div className="App">
                 <h1 id="title">Todos MVC</h1>
                 <div id="App-main">
-                    <div id="App-header">
-                        <img alt="" onClick={this.onClickAll} src={TickImg} width={20} height={20} />
-                        <input placeholder="What needs to be done ?" type="text" onKeyUp={this.onKeyUp} />
-                    </div>
+                    <Header onClickAll={this.onClickAll} onKeyUp={this.onKeyUp} />
                     <div id="App-body">
                         {
                             this.state.todoItems.map((item, index) =>
@@ -93,7 +128,10 @@ class App extends Component {
                         }
                     </div>
                     <div id="App-footer">
-                        <Footer />
+                        <Footer 
+                            totalItem={todoItems.length}
+                            onClickFilter={this.onClickFilter} 
+                            statusEnums={statusEnums} />
                     </div>
                 </div>
             </div>
