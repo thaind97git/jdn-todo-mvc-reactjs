@@ -1,27 +1,25 @@
 
-#App-header {
+#header {
     margin: auto;
     text-align: left;
     display: flex;
     align-items: center;
     border: 1px solid #dcd6d6;
-  }
-  #App-header > img{
+}
+#header > img{
     margin: 0 15px;
     cursor: pointer;
-  }
-  #App-header > input {
+}
+#header > input {
     margin-left: 10px;
     font-size: 24px;
     font-weight: 300;
     width: 100%;
     border: none;
-    /* opacity: .2; */
-    margin: 10px;
+    margin: 18px 0;
     outline: none;
-
-  }
-  #App-header > input::placeholder {
-      opacity: .5;
-      font-style: italic
-  }
+}
+#header > input::placeholder {
+    opacity: .5;
+    font-style: italic
+}

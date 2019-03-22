@@ -1,32 +1,34 @@
 import React, { Component } from 'react';
 import './App.css';
-import TodoItems from './components/Todoitems';
 import Footer from './components/Footer/Footer';
 import Header from './components/Header/Header';
+import TodoList from './components/TodoList/TodoList';
+import LocalStorageService from './Service/localStorageService';
 
-let defaultTodoItems = [];
+import classNames from 'classnames';
 
+const key = 'jdn-todo-mvc-reactjs';
 class App extends Component {
     constructor() {
         super();
+        let todoLocalStorage = LocalStorageService().getItem(key) ? LocalStorageService().getItem(key) : [];
         this.state = {
-            'todoItems': [
-                { title: 'Item 01', isComplete: true },
-                { title: 'Item 02', isComplete: true },
-                { title: 'Item 03', isComplete: false }
-            ],
+            'todoItems': todoLocalStorage,
             'statusEnums': [
                 { title: 'All', status: 1 },
                 { title: 'Active', status: 2 },
                 { title: 'Complete', status: 3 }
-            ]
+            ],
+            'defaultStatus': 1
         }
-
-        defaultTodoItems = [...this.state.todoItems];
         this.onKeyUp = this.onKeyUp.bind(this);
         this.onClickAll = this.onClickAll.bind(this);
-        this.onClickFilter = this.onClickFilter.bind(this);
+        this.onGetStatus = this.onGetStatus.bind(this);
+        this.onItemClicked = this.onItemClicked.bind(this);
+        this.onClickCancel = this.onClickCancel.bind(this);
     }
+
+
 
     onItemClicked(item) {
         return () => {
@@ -42,6 +44,8 @@ class App extends Component {
                     },
                     ...todoItems.slice(index + 1)
                 ]
+            }, function() {
+                LocalStorageService().setItem(key, this.state.todoItems);
             })
         }
     }
@@ -53,9 +57,10 @@ class App extends Component {
             if (!text || text === '') {
                 return;
             } else {
-
                 this.setState({
-                    todoItems: [{ title: text, isComplete: false }, ...todoItems]
+                    todoItems: [...todoItems, { title: text, isComplete: false }]
+                }, function() {
+                    LocalStorageService().setItem(key, this.state.todoItems);
                 });
                 event.target.value = '';
             }
@@ -69,6 +74,8 @@ class App extends Component {
         newTodoItems.forEach(e => e.isComplete = !isAllComplete);
         this.setState({
             todoItems: newTodoItems
+        }, function() {
+            LocalStorageService().setItem(key, this.state.todoItems);
         })
     }
 
@@ -79,59 +86,49 @@ class App extends Component {
             newTodoItems.splice(todoItems.indexOf(item), 1)
             this.setState({
                 todoItems: newTodoItems
+            }, function() {
+                LocalStorageService().setItem(key, this.state.todoItems);
             })
         }
     }
 
-    onClickFilter(index) {
+    onGetStatus(status) {
         return () => {
-            switch (index) {
-                case 1:
-                    this.setState({
-                        todoItems: defaultTodoItems
-                    });
-                    break;
-                case 2:
-                    this.setState({
-                        todoItems: defaultTodoItems.filter(t => t.isComplete === false)
-                    });
-                    break;
-                case 3:
-                    this.setState({
-                        todoItems: defaultTodoItems.filter(t => t.isComplete === true)
-                    });
-                    break;
-                default:
-                    this.setState({
-                        todoItems: defaultTodoItems
-                    })
-                    break;
-            }
+            this.setState({
+                defaultStatus: status
+            })
+        }
+    }
+
+    onToDoItemsFilter(status) {
+        const { todoItems } = this.state;
+        switch (status) {
+            case 1:
+                return [...todoItems]
+            case 2:
+                return [...todoItems].filter(q => q.isComplete === false);
+            case 3:
+                return [...todoItems].filter(q => q.isComplete === true);
+            default:
+                return [...todoItems]
         }
     }
 
     render() {
-        const { todoItems, statusEnums } = this.state;
+        const { defaultStatus, todoItems } = this.state;
+        let todoItemsFilter = this.onToDoItemsFilter(defaultStatus);
         return (
             <div className="App">
-                <h1 id="title">Todos MVC</h1>
+                <h1 id="App-title">Todos MVC</h1>
                 <div id="App-main">
-                    <Header onClickAll={this.onClickAll} onKeyUp={this.onKeyUp} />
-                    <div id="App-body">
-                        {
-                            this.state.todoItems.map((item, index) =>
-                                <TodoItems
-                                    key={index}
-                                    item={item}
-                                    onClick={this.onItemClicked(item)}
-                                    onClickCancel={this.onClickCancel(item)}/>)
-                        }
+                    <div id="App-header">
+                        <Header onClickAll={this.onClickAll} onKeyUp={this.onKeyUp}/>
                     </div>
-                    <div id="App-footer">
-                        <Footer 
-                            totalItem={todoItems.length}
-                            onClickFilter={this.onClickFilter} 
-                            statusEnums={statusEnums} />
+                    <div id="App-body">
+                        <TodoList todoItemsFilter= { todoItemsFilter } onItemClicked={ this.onItemClicked } onClickCancel={ this.onClickCancel }/>
+                    </div>
+                    <div id="App-footer" className={classNames("",{"display-none": todoItems.length === 0})}>
+                        <Footer totalItem={ todoItemsFilter.length } onGetStatus={ this.onGetStatus } appState={ this.state }/>
                     </div>
                 </div>
             </div>
