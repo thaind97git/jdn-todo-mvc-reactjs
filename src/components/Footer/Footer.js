@@ -1,11 +1,13 @@
 import React, { Component } from 'react';
 import classNames from 'classnames';
+import PropTypes from 'prop-types';
 
 import './Footer.css'
 
 class Footer extends Component {
     render() {
-        const { totalItem, onGetStatus, appState } = this.props;
+        const { totalItem, onGetStatus, appState, onClearCompleted } = this.props;
+        const isDisplayClear = appState.todoItems.some(x => x.isComplete);
         return (
             <div id="Footer">
                 <div id="number">
@@ -18,9 +20,23 @@ class Footer extends Component {
                                 key={item.status}>{item.title} </p>)
                     }
                 </div>
+                { isDisplayClear && <div onClick={ onClearCompleted } id="clear">Clear Completed</div> }
             </div>
         );
     }
+}
+
+Footer.defaultProps = {
+    totalItem: 0
+}
+
+Footer.propTypes = {
+    totalItem: PropTypes.number,
+    onGetStatus: PropTypes.func.isRequired,
+    appState: PropTypes.shape({
+        defaultStatus: PropTypes.number,
+        statusEnums: PropTypes.array
+    })
 }
 
 export default Footer;

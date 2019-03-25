@@ -13,6 +13,17 @@
     position: absolute;
     margin: 10px
 }
+#clear {
+    position: absolute;
+    margin: 12px;
+    right: 0px;
+    bottom: 0;
+    text-decoration: none
+}
+#clear:hover{
+    text-decoration: underline;
+    cursor: pointer;
+}
 
 #status {
     margin: auto;

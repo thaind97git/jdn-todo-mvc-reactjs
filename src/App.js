@@ -1,4 +1,6 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+
 import './App.css';
 import Footer from './components/Footer/Footer';
 import Header from './components/Header/Header';
@@ -11,7 +13,7 @@ const key = 'jdn-todo-mvc-reactjs';
 class App extends Component {
     constructor() {
         super();
-        let todoLocalStorage = LocalStorageService().getItem(key) ? LocalStorageService().getItem(key) : [];
+        let todoLocalStorage = LocalStorageService.getItem(key) ? LocalStorageService.getItem(key) : [];
         this.state = {
             'todoItems': todoLocalStorage,
             'statusEnums': [
@@ -26,6 +28,7 @@ class App extends Component {
         this.onGetStatus = this.onGetStatus.bind(this);
         this.onItemClicked = this.onItemClicked.bind(this);
         this.onClickCancel = this.onClickCancel.bind(this);
+        this.onClearCompleted = this.onClearCompleted.bind(this);
     }
 
 
@@ -45,7 +48,7 @@ class App extends Component {
                     ...todoItems.slice(index + 1)
                 ]
             }, function() {
-                LocalStorageService().setItem(key, this.state.todoItems);
+                LocalStorageService.setItem(key, this.state.todoItems);
             })
         }
     }
@@ -60,7 +63,7 @@ class App extends Component {
                 this.setState({
                     todoItems: [...todoItems, { title: text, isComplete: false }]
                 }, function() {
-                    LocalStorageService().setItem(key, this.state.todoItems);
+                    LocalStorageService.setItem(key, this.state.todoItems);
                 });
                 event.target.value = '';
             }
@@ -75,7 +78,7 @@ class App extends Component {
         this.setState({
             todoItems: newTodoItems
         }, function() {
-            LocalStorageService().setItem(key, this.state.todoItems);
+            LocalStorageService.setItem(key, this.state.todoItems);
         })
     }
 
@@ -87,7 +90,7 @@ class App extends Component {
             this.setState({
                 todoItems: newTodoItems
             }, function() {
-                LocalStorageService().setItem(key, this.state.todoItems);
+                LocalStorageService.setItem(key, this.state.todoItems);
             })
         }
     }
@@ -114,6 +117,14 @@ class App extends Component {
         }
     }
 
+    onClearCompleted() {
+        this.setState({
+            todoItems: this.state.todoItems.filter(q => q.isComplete === false )
+        }, function() {
+            LocalStorageService().setItem(key, this.state.todoItems)
+        })
+    }
+
     render() {
         const { defaultStatus, todoItems } = this.state;
         let todoItemsFilter = this.onToDoItemsFilter(defaultStatus);
@@ -122,18 +133,28 @@ class App extends Component {
                 <h1 id="App-title">Todos MVC</h1>
                 <div id="App-main">
                     <div id="App-header">
-                        <Header onClickAll={this.onClickAll} onKeyUp={this.onKeyUp}/>
+                        <Header onClickAll={this.onClickAll} onKeyUp={this.onKeyUp} todoItemsFilter={todoItemsFilter}/>
                     </div>
                     <div id="App-body">
                         <TodoList todoItemsFilter= { todoItemsFilter } onItemClicked={ this.onItemClicked } onClickCancel={ this.onClickCancel }/>
                     </div>
                     <div id="App-footer" className={classNames("",{"display-none": todoItems.length === 0})}>
-                        <Footer totalItem={ todoItemsFilter.length } onGetStatus={ this.onGetStatus } appState={ this.state }/>
+                        <Footer totalItem={ todoItemsFilter.length } onGetStatus={ this.onGetStatus } 
+                            appState={ this.state } onClearCompleted= { this.onClearCompleted }/>
                     </div>
                 </div>
             </div>
         );
     }
+}
+
+App.defaultProps = {
+    todoItems: []
+}
+
+App.propTypes = {
+    defaultStatus: PropTypes.number,
+    todoItems: PropTypes.array
 }
 
 export default App;
