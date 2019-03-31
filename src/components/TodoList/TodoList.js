@@ -1,31 +1,44 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
+import './TodoList.css';
+
 import TodoItems from './TodoItems/Todoitems';
-import './TodoList.css'
+import { TodoItemContext } from '../Contexts/TodoItem.context';
 
 class TodoList extends Component {
     render() {
-        const { todoItemsFilter, onItemClicked, onClickCancel } = this.props
         return (
-            <div className="TodoList">
-            {
-                todoItemsFilter.map((item, index) => <TodoItems key={ index } item={ item }
-                    onItemClicked={ onItemClicked(item) } onClickCancel={ onClickCancel(item) }/>)
-            }
-            </div>
+            <TodoItemContext.Consumer>
+                {({ todoItemsFilter, onItemClicked, onClickCancel, defaultStatus }) => (
+                    <div className="TodoList">
+                    {
+                        todoItemsFilter(defaultStatus).map((item, index) => 
+                            <TodoItems 
+                                key={ index } 
+                                item={ item }
+                                onItemClicked={() => onItemClicked(item) } 
+                                onClickCancel={() => onClickCancel(item) }
+                            />
+                        )
+                    }
+                    </div>
+                )}
+            </TodoItemContext.Consumer>
         );
     }
 }
 
 TodoList.defaultProps = {
-    todoItemsFilter: []
+    todoItemsFilter: [],
+    defaultStatus: 1
 }
 
 TodoList.propTypes = {
     todoItemsFilter: PropTypes.array,
-    onItemClicked: PropTypes.func.isRequired,
-    onClickCancel: PropTypes.func.isRequired
+    onItemClicked: PropTypes.func,
+    onClickCancel: PropTypes.func,
+    defaultStatus: PropTypes.number
 };
 
 export default TodoList;
