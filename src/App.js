@@ -23,17 +23,11 @@ class App extends Component {
             ],
             'defaultStatus': 1
         }
-        this.onKeyUp = this.onKeyUp.bind(this);
-        this.onClickAll = this.onClickAll.bind(this);
-        this.onGetStatus = this.onGetStatus.bind(this);
-        this.onItemClicked = this.onItemClicked.bind(this);
-        this.onClickCancel = this.onClickCancel.bind(this);
-        this.onClearCompleted = this.onClearCompleted.bind(this);
     }
 
 
 
-    onItemClicked(item) {
+    onItemClicked = (item) => {
         return () => {
             const isComplete = item.isComplete;
             const { todoItems } = this.state;
@@ -53,7 +47,7 @@ class App extends Component {
         }
     }
 
-    onKeyUp(event) {
+    onKeyUp = (event) => {
         if (event.keyCode === 13) {
             const { todoItems } = this.state;
             let text = event.target.value.trim();
@@ -70,7 +64,7 @@ class App extends Component {
         }
     }
 
-    onClickAll() {
+    onClickAll = () => {
         const { todoItems } = this.state;
         const isAllComplete = todoItems.every(t => t.isComplete);
         const newTodoItems = [...todoItems];
@@ -82,7 +76,7 @@ class App extends Component {
         })
     }
 
-    onClickCancel(item) {
+    onClickCancel = (item) => {
         return () => {
             const { todoItems } = this.state;
             const newTodoItems = [...todoItems]; 
@@ -95,7 +89,7 @@ class App extends Component {
         }
     }
 
-    onGetStatus(status) {
+    onGetStatus = (status) => {
         return () => {
             this.setState({
                 defaultStatus: status
@@ -103,7 +97,7 @@ class App extends Component {
         }
     }
 
-    onToDoItemsFilter(status) {
+    onToDoItemsFilter = (status) => {
         const { todoItems } = this.state;
         switch (status) {
             case 1:
@@ -117,7 +111,7 @@ class App extends Component {
         }
     }
 
-    onClearCompleted() {
+    onClearCompleted = () => {
         this.setState({
             todoItems: this.state.todoItems.filter(q => q.isComplete === false )
         }, function() {
